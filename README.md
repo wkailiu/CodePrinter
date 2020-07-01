@@ -8,5 +8,9 @@ python demo.py -c path/to/your/code -f py
 ```
 python demo.py -c path/to/your/code -f cpp,py
 ```
+3. Use other style file in highlight/styles
+```
+python demo.py -c path/to/your/code -f py -s a11y-dark.css
+```
 ### Use GoogleChrome to open CodePrinter.html and print it
 ![Google Chrome Printer(Ctrl+P)](config.png)
