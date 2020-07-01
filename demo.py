@@ -6,17 +6,22 @@ import warnings
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--code_folder', type=str)
-    parser.add_argument('-f', '--file_types', type=str, default='py,cpp')
+    parser.add_argument('-f', '--file_types', type=str, default='py')
+    parser.add_argument('-i', '--ignore_file', type=str, default='__init__.py')
     parser.add_argument('-n', '--page_lines', type=int, default=87)
     parser.add_argument('-m', '--max_length', type=int, default=110)
     parser.add_argument('-s', '--style', type=str, default='default.css')
     args = parser.parse_args()
     
     file_type_list = args.file_types.split(',')
+    ignore_file_list = args.ignore_file.split(',')
 
     file_list = []
     for folder, _, fn_list in os.walk(args.code_folder):
         for fn in fn_list:
+            # ignore the file
+            if fn in ignore_file_list:
+                continue
             if fn.split('.')[-1] in file_type_list:
                 file_list.append(os.path.join(folder, fn))
     
@@ -48,7 +53,12 @@ def main():
         
         # add to content
         short_fn = fn[len(args.code_folder)+1:]
-        content.append('({}) {}[{}]\n'.format(len(content) + 1, short_fn, int(len(line_list)/args.page_lines) + 1))
+        content.append(
+            '({}) {}{}[{}]\n'.format(
+                len(content) + 1, 
+                short_fn, 
+                ' '*(80-len(short_fn)) + '\t'*2,
+                int(len(line_list)/args.page_lines) + 1))
 
         # add title
         n = int((args.max_length - len(short_fn))/2)
