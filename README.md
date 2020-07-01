@@ -1,12 +1,12 @@
-CodePrinter
-## Example
-### print file *.py 
+CodePrinter: print code to pdf
+### Example
+1. Print *.py files
 ```
 python demo.py -c path/to/your/code -f py
 ```
-### print file *.cpp  and *.py
+2. Print *.cpp  and *.py files
 ```
 python demo.py -c path/to/your/code -f cpp,py
 ```
-### use Google Chrome to open CodePrinter.html and print it
-![Google Chrome Printer](config.png)
+### Use GoogleChrome to open CodePrinter.html and print it
+![Google Chrome Printer(Ctrl+P)](config.png)
