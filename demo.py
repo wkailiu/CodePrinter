@@ -35,7 +35,8 @@ def main():
     if not check:
         print('Codes are too long, please fix them.')
         sys.exit()
-      
+    
+    content = []
     line_list = []
     for fn in file_list:
         if len(line_list) > 0:
@@ -45,29 +46,41 @@ def main():
             for i in range(n):
                 line_list.append('\n')
         
-        n = int((args.max_length - len(fn))/2)
-        line_list.append('{}{}{}\n'.format('-'*n, fn, '-'*n))
+        # add to content
+        short_fn = fn[len(args.code_folder)+1:]
+        content.append('({}) {}[{}]\n'.format(len(content) + 1, short_fn, int(len(line_list)/args.page_lines) + 1))
+
+        # add title
+        n = int((args.max_length - len(short_fn))/2)
+        line_list.append('{}{}{}\n'.format('-'*n, short_fn, '-'*n))
         line_list.append('\n')
-        i = 0
+
         with open(fn, 'r') as fr:
             line_list.extend(fr.readlines())
     if not os.path.exists(os.path.join('highlight/styles', args.style)):
         print('The style file [{}] is not exist.'.format(args.style))
         sys.exit()
     
+    project_name = args.code_folder.split('/')[-1]
+
     head = """
         <!DOCTYPE html><html><head lang="en">
-        <meta charset="UTF-8"><title>CodePrinter</title>
+        <meta charset="UTF-8"><title>{}</title>
         <link rel="stylesheet" href="highlight/styles/{}">
         <script src="highlight/highlight.pack.js"></script>
         <body><script>hljs.initHighlightingOnLoad();</script>
-        <pre><code class="python">""".format(args.style)
+        <pre><code class="python">""".format(project_name, args.style)
     tail = """</code></pre></body></html>"""
 
-    with open('CodePrinter.html', 'w') as fw:
+    with open(project_name + '.html', 'w') as fw:
         fw.write(head)
         fw.writelines(line_list)
         fw.write(tail)
+
+    # save content
+    with open(project_name + '_content.txt', 'w') as fw:
+        fw.write(project_name + '\n')
+        fw.writelines(content)
 
 
 if __name__ == "__main__":
